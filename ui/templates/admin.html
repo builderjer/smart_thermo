@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block header_title %}ZIGGY THERMOSTAT ADMIN{% endblock %}
+{% block head %}
+  <script src="{{ url_for('static', filename = 'js/admin.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/admin.css') }}">
+{% endblock %}
+{% block body %}
+  <div id="main_body_admin" class="in_a_bubble dark_background">
+    <div id="sensor_wrapper" class="in_a_bubble light_background">
+      <div id="sensor_title" class="title xlg_txt">sensors</div>
+      <div id="add_sensor" class="clickable in_a_bubble dark_background">
+        <a href="{{ url_for('add_sensor_page') }}">add sensor</a>
+      </div>
+      <div id="attached_sensor_wrapper" class="in_a_bubble dark_background">
+        <ol id="sensors">
+          {% for sensor in sensors %}
+          <li class="nostyle"><a href="#">{{ sensor }}</a></li>
+          {% endfor %}
+        </ol>
+      </div>
+      <div id="remove_sensor" class="in_a_bubble dark_background">
+        <a href="#">Remove sensor</a>
+      </div>
+    </div>
+    <div id="group_wrapper" class="in_a_bubble light_background">
+      <div id="group_title" class="title xlg_txt">groups</div>
+      <div id="add_group" class="clickable in_a_bubble dark_background">
+        <a href="#">add group</a>
+      </div>
+      <ol id="groups">
+      </ol>
+    </div>
+  </div>
+  <div id="icon_wrapper" class="in_a_bubble dark_background">
+    <a href="{{ url_for('index') }}" class="fas fa-arrow-left in_a_bubble light_background"></a>
+    <a href="{{ url_for('index') }}" class="fas fa-home in_a_bubble light_background"></a>
+  </div>
+{% endblock %}

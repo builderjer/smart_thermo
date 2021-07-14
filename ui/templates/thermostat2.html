@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block header_title %}ZIGGY THERMOSTAT{% endblock %}
+{% block head %}
+  <script src="{{ url_for('static', filename = 'js/thermostat2.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename = 'js/weather.js') }}"></script> -->
+{% endblock %}
+{% block body %}
+  <div id="main_body">
+    <div id="weather_wrapper" class="in_a_bubble dark_background">
+      <div id="forecast_wrapper" class="in_a_bubble">
+        <div class="md_txt title">todays forecast</div>
+        <div>high / low</div>
+        <span id="high_temp">69</span>
+        <span> / </span>
+        <span id="low_temp">69</span>
+        <div id="forecast_icon" class="">
+          <img src="{{ url_for('static', filename = 'images/weather/AerisIcons/clear.png') }}" alt="no icon">
+        </div>
+        <p class="xsm_txt">todays forecast summary and hopefully it wraps around</p>
+      </div>
+      <div id="current_weather_wrapper" class="in_a_bubble dark_background">
+        <div class="md_txt title">current weather</div>
+        <div id="outside_temp" class="xjumbo_txt">69</div>
+        <div id="current_icon_wrapper" class="">
+          <img id="current_icon" src="{{ url_for('static', filename = 'images/weather/AerisIcons/chancetstormn.png') }}" alt="no icon">
+        </div>
+        <p id="current_summary" class="xsm_txt">the summary of the weather as of the moment</p>
+      </div>
+    </div>
+
+    <div id="thermostat_display" class="in_a_bubble light_background">
+      <div id="mode_controls" class="in_a_bubble dark_background">
+        <div id="off_indicator" class="in_a_bubble clickable">off</div>
+        <div id="heat_indicator" class="in_a_bubble clickable">heat</div>
+        <div id="cool_indicator" class="in_a_bubble clickable">cool</div>
+        <div id="vent_indicator" class="in_a_bubble clickable">vent</div>
+      </div>
+      <i id="house_temp" class="massive_txt">- -</i>
+      <div id="admin_wrapper" class="in_a_bubble dark_background">
+        <div id="room_temp" class="in_a_bubble clickable">rooms</div>
+        <div  class="in_a_bubble dark_background">
+          <a id="admin" href="{{ url_for('admin_page') }}" class="clickable fas fa-cogs"></a>
+        </div>
+      </div>
+    </div>
+    <div id="control_wrapper" class="in_a_bubble dark_background">
+      <div class="in_a_bubble">
+        <div id="desired_temp_wrapper" class="md_txt title">
+          <span id="desired_temp_title">desired temp: </span>
+          <span id="desired_temp">- -</span>
+          <!-- <span id="desired_temp">{{ desired_temp }}</span> -->
+        </div>
+        <div>
+          <i id="up_arrow" class="in_a_bubble clickable fas fa-long-arrow-alt-up fa-10x"></i>
+        </div>
+        <div>
+          <i id="down_arrow" class="in_a_bubble clickable fas fa-long-arrow-alt-down fa-10x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

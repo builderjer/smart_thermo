@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block header_title %}ADD A SENSOR{% endblock %}
+{% block head %}
+  <script src="{{ url_for('static', filename = 'js/admin.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/admin.css') }}">
+{% endblock %}
+{% block body %}
+  <div id="main_body_sensor" class="in_a_bubble dark_background">
+    <div id="main_wrapper" class="in_a_bubble light_background">
+      <form class="" action="{{ url_for('admin_page') }}" method="post">
+        <label for="sensor_name">sensor name</label>
+        <input id="sensor_name" type="text" name="sensor_name" value="" class="full_width" required>
+        <div id="sensor_stuff">
+          <div class="small_block">
+          <label for="sensor_type">sensor type</label>
+          <select id="sensor_type" name="sensor_type" required>
+            {% for i in range(0, num_of_sensor_types) %}
+            <option value={{ sensors[i] }}>{{ sensors[i] }}</option>
+            <!-- <option value="LM35">LM35</option> -->
+            {% endfor %}
+            <option value="" selected></option>
+          </select>
+          </div>
+          <div class="small_block">
+          <label for="control_pins" class="block">Pin Number</label>
+          <select id="control_pins" class="block" name="control_pins" required>
+            {% for i in range(10) %}
+            <option value={{ i }}>{{ i }}</option>
+            {% endfor %}
+            <option value="" selected></option>
+          </select>
+          </div>
+          <div class="small_block">
+            <label for="differential">Differential</label>
+            <input id="differential" type="number" name="differential" value="0">
+          </div>
+        </div>
+        <div class="full_width">
+        <input id="create_sensor" type="submit" name="" value="create sensor">
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block header_title %}CREATE A GROUP{% endblock %}
+{% block head %}
+  <script src="{{ url_for('static', filename = 'js/admin.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/admin.css') }}">
+{% endblock %}
+{% block body %}
+  <div id="main_body_group" class="in_a_bubble dark_background">
+    <div id="group_wrapper" class="in_a_bubble light_background">
+      <form class="" action="{{ url_for('admin_page')}}" method="post">
+        <label for="group_name">group name</label>
+        <input id="group_name" type="text" name="group_name" value="" required>
+        <div id="group_stuff">
+          <label for="avaliable_sensors">avaliable sensors</label>
+
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

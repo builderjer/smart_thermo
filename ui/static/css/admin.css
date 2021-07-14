@@ -1,0 +1,102 @@
+#main_body_admin, #main_body_sensor {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  padding: 20px, 10px, 20px, 10px;
+}
+
+#sensor_wrapper {
+  order: 1;
+  height: 97%;
+  width: 50%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+#sensor_title {
+  order: 1;
+}
+
+#add_sensor {
+  order: 2;
+}
+
+#attached_sensor_wrapper {
+  order: 3;
+}
+
+#remove_sensor {
+  order: 4;
+}
+
+#group_wrapper {
+  order: 2;
+  height: 97%;
+  width: 50%;
+  text-align: center;
+}
+
+#main_body_sensor {
+  display: flex;
+  padding: 10px;
+}
+#main_wrapper {
+  width: 75%;
+  height: 100%;
+}
+
+label {
+  margin: auto;
+}
+
+input[type=text], select {
+  font-family: 'default';
+  color: #008080;
+  display: block;
+  margin-bottom: 30px;
+}
+
+.full_width {
+  width: 100%
+}
+.half_width {
+  width: 30%;
+}
+
+#sensor_stuff {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+
+.block {
+  display: block;
+}
+.small_block {
+  display: inline-block;
+}
+
+#create_sensor {
+  font-family: 'default';
+  color: #008080;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#attached_sensor_wrapper {
+  height: 100%;
+}
+
+li.nostyle {
+  list-style-type: none;
+  padding: 10px;
+}
+
+#icon_wrapper {
+  display: flex;
+  justify-content: space-around;
+}

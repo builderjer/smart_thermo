@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block title %} Ziggy Thermostat {% endblock %}
+{% block head %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+{% endblock %}
+{% block body %}
+		<div id="left-wrapper" class="col-3 ctr">
+			<div id="forecast-wrapper">
+				<div id="HL-lable" class="lg-txt">High / Low</div>
+				<div id="temp" class="lg-txt">
+					<span id='outside_temp'></span>
+				</div>
+				<div id="dailySummary" class="md-txt lower">forecast summary</div>
+			</div>
+			<div id="current-wrapper">
+				<div id="current-lable" class="xlg-txt">Current Weather</div>
+				<div id="currentTemp" class="xxlg-txt">Current Temp Error</div>
+				<div id="currentSummary" class="md-txt">current weather summary</div>
+			</div>
+		</div>
+		<div id="inside-wrapper" class="col-5 ctr">
+			<div id="long-date" class="lg-txt ctr">Date</div>
+			<div id="short-clock" class="jumbo-txt">Time</div>
+			<div id="thermostat-state-wrapper" class="col-11 lg-txt ctr">
+				<span id="heatIndicator">HEAT</span>
+				<span id="cool-indicator">COOL</span>
+				<span id="vent-indicator">VENT</span>
+				<span id="off_indicator">OFF</span>
+			</div>
+			<div id="indorTemp" class="massive-txt lower"></div>
+			<div id="indoor-temp" class="massive-txt">69&degF</div>
+		</div>
+		<div id="right-wrapper" class="col-3 ctr">
+			<div id="desired-temp-wrapper" class="lg-txt">
+				<span id="desired-temp-lable">Desired Temp: </span>
+				<span id="desiredTemp"></span>
+			</div>
+			<div id="control-btns">
+				<div id="up-button">
+					<img id="adj-up-image" src="{{ url_for('static', filename= 'images/icons/up-arrow.png') }}" alt="adj-up" onclick="onTempUp()"></img>
+				</div>
+				<div id="down-button">
+				<img id="adj-down-image" src="{{ url_for('static', filename= 'images/icons/down-arrow.png') }}" alt="adj-down" onclick="onTempDown()"></img>
+				</div>
+			</div>
+		</div>
+	</body>
+	{% endblock %}
+{% endblock %}

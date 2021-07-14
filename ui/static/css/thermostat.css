@@ -1,0 +1,109 @@
+#left_wrapper {
+	height: 100%;
+	border-right: 5px solid #00e6e6;
+}
+
+#right_wrapper {
+	height: 100%;
+	border-left: 5px solid #00e6e6;
+}
+
+#forecast_wrapper {
+	height: 50%;
+	border-bottom: 5px solid #00e6e6;
+	position: relative;
+}
+
+#forecast_title {
+	margin-top: 5%;
+	margin-bottom: 5%;
+}
+
+#high_low_lable #current_lable {
+	margin-top: 5%;
+}
+
+#temperature {
+	padding-bottom: 10%
+}
+
+#current_temperature #outside_temperature{
+	padding-bottom: 10%;
+}
+
+#temp_high #temp_low {
+	padding: 15%;
+}
+
+#daily_summary #current_summary{
+	padding-bottom: 5%;
+}
+
+#current_wrapper {
+	height: 50%;
+	margin-top: 10%;
+	position: relative;
+}
+
+/*#inside-wrapper {
+	align-items: center;
+	position: absolute;
+}*/
+/*#currentWeather {
+	margin-top: 10%;
+}*/
+
+/*#currentIcon {
+	margin-top: 5%;
+}
+
+#weatherIcon {
+	margin-top: 5%;
+}*/
+
+/*#currentTemp {
+	padding: 15%;
+}*/
+
+#indoor_temperature {
+	margin-top: 30%;
+}
+
+.lower {
+	position: absolute;
+	bottom: 10%;
+	right: 0;
+	left: 0;
+	text-align: center;
+}
+
+.lg-img {
+	width: 20%;
+	height: 20%;
+}
+
+#right_wrapper {
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+}
+
+#desired_temp_wrapper #control_buttonsbtns {
+	display: block;
+	margin-top: 10%;
+	margin-bottom: 10%;
+
+}
+
+#temp_up #temp_down {
+	margin-top: 10%;
+	margin-bottom: 10%;
+}
+
+#up_aarow {
+	margin-bottom: 10%;
+}
+
+#down_aarow {
+	margin-top: 10%;
+}
