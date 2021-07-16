@@ -1,4 +1,4 @@
-from brodie_house.tools import merge_dict
+from smart_thermo.tools import merge_dict
 
 class GenericDevice:
     def __init__(self, host, name=None, raw_data=None):

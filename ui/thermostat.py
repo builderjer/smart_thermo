@@ -12,21 +12,21 @@ from pathlib import Path
 
 # BUG: Find another way to do this
 #  Should go away when used as package
-sys.path.append('/home/jbrodie/tstat')
+sys.path.append('/home/jbrodie/Software')
 
 import eventlet
-from brodie_house.exceptions import *
-from brodie_house.tools import *
+from smart_thermo.exceptions import *
+from smart_thermo.tools import *
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_socketio import SocketIO
 
 
 
 
-# from brodie_house.devices.thermostat import Thermostat
-# import brodie_house.sensors as sensors
-# from brodie_house.weather.weatherapi import Weather
-# from brodie_house.devices.hvac_unit import Thermostat
+# from smart_thermo.devices.thermostat import Thermostat
+# import smart_thermo.sensors as sensors
+# from smart_thermo.weather.weatherapi import Weather
+# from smart_thermo.devices.hvac_unit import Thermostat
 
 eventlet.monkey_patch()
 
@@ -190,7 +190,7 @@ def admin_page():
             print('error')
         else:
             try:
-                # s = getattr(importlib.import_module('brodie_house.sensors'), form.get('sensor_type'))
+                # s = getattr(importlib.import_module('smart_thermo.sensors'), form.get('sensor_type'))
                 # # print(form.get('sensor_name'))
                 # print(s)
                 # print(type(form.get('control_pins')))

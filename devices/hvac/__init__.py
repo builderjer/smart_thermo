@@ -4,10 +4,10 @@ import time
 
 import serial
 import socketio
-from brodie_house.devices import GenericDevice
-from brodie_house.exceptions import *
-from brodie_house.sensors import *
-from brodie_house.tools import (convert_temp, create_daemon, create_timer,
+from smart_thermo.devices import GenericDevice
+from smart_thermo.exceptions import *
+from smart_thermo.sensors import *
+from smart_thermo.tools import (convert_temp, create_daemon, create_timer,
                                 merge_dict)
 from telemetrix import telemetrix
 
@@ -597,7 +597,7 @@ class HVAC(GenericDevice):
 
     def add_sensor(self, msg):
         sensor_class = getattr(importlib.import_module(
-            'brodie_house.sensors'), msg[3])
+            'smart_thermo.sensors'), msg[3])
         sensor = sensor_class(msg[0], msg[1], differential=msg[2])
         self.thermostat.add_sensor(sensor, self.control_board)
 
