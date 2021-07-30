@@ -21,6 +21,7 @@ SAVE_DIRECTORY = '.config/thermostat/{}_thermostat.json'
 # Hvac units
 UNIT_TYPES = ['HEATER', 'AIRCONDITIONER', 'VENT']
 UNIT_STATES = ['ON', 'OFF']
+# HOST = 'http://192.168.0.254:5000'
 HOST = 'http://ziggyweb.ziggyhome:5000'
 
 
@@ -254,7 +255,7 @@ class Thermostat:
 
     def remove_sensor_from_group(self, group_name, sensor):
         if group_name in self.groups and sensor in self.groups[group_name]:
-            self.groups[groupName].remove(sensor)
+            self.groups[group_name].remove(sensor)
         elif group_name in self.groups and sensor not in self.groups[group_name]:
             raise SensorError(
                 f'Sensor {sensor.id} is not in group {group_name}')
@@ -496,6 +497,7 @@ class HVAC(GenericDevice):
                      handler=self.thermostat.get_group_temp)
         self.sock.on('change_desired_temp', handler=self.set_desired_temp)
         self.sock.on('main_page', handler=self.connect)
+        self.sock.on('get_sensors', handler=self.send_sensors)
         # Make sure everything is off
         for unit in self.units.values():
             self.turn_off(unit)
@@ -609,6 +611,13 @@ class HVAC(GenericDevice):
                 return self.thermostat.desired_temp
         except Exception as e:
             print(f'exception in set_desired_temp:  {e}')
+
+    def send_sensors(self):
+        print(f'in send_sensors: {list(self.thermostat.sensors.keys())}')
+        try:
+            return list(self.thermostat.sensors.keys())
+        except Exception as e:
+            print(f'could not get sensors: {e}')
 
     def turn_on(self, unit):
         if not isinstance(unit, HVACUnit):
@@ -731,5 +740,6 @@ class HVAC(GenericDevice):
 hvac = HVAC(HOST, control_board=telemetrix.Telemetrix(), heat_unit=HVACUnit('heater', on_pin=4, off_pin=5),
             ac_unit=HVACUnit('airconditioner', on_pin=6, off_pin=7), vent_unit=HVACUnit('vent', on_pin=2, off_pin=3))
 hvac.startup()
-create_daemon(hvac.run)
+# create_daemon(hvac.run)
 hvac.thermostat.state = 'COOL'
+hvac.run()

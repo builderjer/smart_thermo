@@ -1,5 +1,6 @@
 from smart_thermo.tools import merge_dict
 
+
 class GenericDevice:
     def __init__(self, host, name=None, raw_data=None):
         self._name = name or self.__class__.__name__

@@ -8,30 +8,22 @@ import os
 import signal
 import sys
 import time
-from pathlib import Path
-
-# BUG: Find another way to do this
-#  Should go away when used as package
-sys.path.append('/home/jbrodie/Software')
-
 import eventlet
-from smart_thermo.exceptions import *
-from smart_thermo.tools import *
+from pathlib import Path
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_socketio import SocketIO
 
+# BUG: Find another way to do this
+#  Should go away when used as package
+sys.path.append('/home/jbrodie/Software/')
 
-
-
-# from smart_thermo.devices.thermostat import Thermostat
-# import smart_thermo.sensors as sensors
-# from smart_thermo.weather.weatherapi import Weather
-# from smart_thermo.devices.hvac_unit import Thermostat
+from smart_thermo.tools import *
+from smart_thermo.exceptions import *
 
 eventlet.monkey_patch()
 
 app = Flask(__name__)
-app.config['SECRET'] = 'abcdefg'
+app.config['SECRET'] = 'WhereAmI@Now?'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['THREADING'] = True
 
@@ -43,26 +35,12 @@ app.config['THREADING'] = True
 # app.config['MQTT_TLS_ENABLED'] = False  # set TLS to disabled for testing purposes
 # mqtt = Mqtt(app)
 socketio = SocketIO(app)
-# asyncio.set_event_loop(Thermostat.loop)
-# hvac = Thermostat('http://ziggyweb.ziggyhome:5000')
-
-# async def run_thermostat():
-#     loop = asyncio.get_event_loop()
-#     asyncio.set_event_loop(loop)
-#     thermostat = await loop.run_in_executor(None, hvac.run)
 
 # Variables
 hvac = None
-# print(Thermostat)
-# weather = Weather()
+
 ##################################################
 # Socket Stuff
-
-
-def test(*args):
-    print(args)
-
-# @socketio.on('connect')
 
 
 @socketio.event
@@ -71,19 +49,6 @@ def connect():
     # print(hvac, '##########################')
     print('connected socketio')
     socketio.emit('main_page', callback=setup_main_page)
-    # socketio.emit('get_hvac', callback=tryme)
-    # try:
-    #     socketio.emit('get_current_temp', data=hvac.get('thermostat').default_area, callback=current_temp)
-    # except AttributeError:
-    #     pass
-    # except NameError:
-    #     pass
-    # socketio.emit('get_thermostat',)
-    # socketio.emit('change_thermostat_state', hvac.state)
-    # socketio.emit('desired_temp_change', hvac.desired_temp)
-# @socketio.on('get_thermostat')
-# def get_thermostat(sid, data):
-#     print(data)
 
 
 def setup_main_page(msg):
@@ -95,12 +60,8 @@ def setup_main_page(msg):
 def tryme(msg):
     global hvac
     hvac = msg
-    # print('in tryme      ', hvac)
     socketio.emit('thermostat_data', hvac.get('thermostat'))
     socketio.emit('desired_temp_change', hvac.get('desired_temp'))
-    # print(hvac.get('default_area'), 'default area')
-    # socketio.emit('get_current_temp', hvac.get('default_area'))
-    #
 
 
 def set_current_temp(temp):
@@ -184,6 +145,12 @@ def thermostat():
 @app.route('/admin_page/', methods=['POST', 'GET'])
 def admin_page():
     global hvac
+    avaliable_sensors = []
+    def set_sensors(sensors):
+        print(sensors)
+        for s in sensors:
+            print(f'sensor: {s}')
+            avaliable_sensors.append(s)
     if request.method == 'POST':
         form = request.form
         if len(form.keys()) != 4:
@@ -207,11 +174,13 @@ def admin_page():
     # Reload the thermostat
 
     try:
-        avaliable_sensors = list(hvac.get('thermostat').get('sensors'))
-        print('avaliable_sensors', avaliable_sensors)
+        socketio.emit('get_sensors', callback = set_sensors)
+        # avaliable_sensors = list(hvac.get('thermostat').get('sensors'))
+        print(f'avaliable_sensors: {avaliable_sensors}')
+
         if avaliable_sensors:
             for s in avaliable_sensors:
-                print(hvac.get('thermostat'))
+                print(s)
         return render_template('admin.html', sensors=avaliable_sensors)
     except Exception as e:
         return render_template('admin.html', sensors=[])
@@ -249,6 +218,7 @@ def index():
 
 def run():
     # asyncio.run(run_thermostat())
+    # socketio.run(app, host='192.168.0.254')
     socketio.run(app, host='ziggyweb.ziggyhome')
     # app.run()
 
