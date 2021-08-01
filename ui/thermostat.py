@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-# import asyncio
 import importlib
-# from flask_mqtt import Mqtt
 import json
 import os
 import signal
@@ -27,13 +25,6 @@ app.config['SECRET'] = 'WhereAmI@Now?'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['THREADING'] = True
 
-# app.config['MQTT_BROKER_URL'] = 'ziggyserver.ziggyhome'  # use the free broker from HIVEMQ
-# app.config['MQTT_BROKER_PORT'] = 1883  # default port for non-tls connection
-# app.config['MQTT_USERNAME'] = 'ziggy'  # set the username here if you need authentication for the broker
-# app.config['MQTT_PASSWORD'] = 'ziggy'  # set the password here if the broker demands authentication
-# app.config['MQTT_KEEPALIVE'] = 5  # set the time interval for sending a ping to the broker to 5 seconds
-# app.config['MQTT_TLS_ENABLED'] = False  # set TLS to disabled for testing purposes
-# mqtt = Mqtt(app)
 socketio = SocketIO(app)
 
 # Variables
@@ -119,23 +110,6 @@ def change_state(message):
     #     print(e)
 
 
-# @mqtt.on_connect()
-# def handle_connect(client, userdata, flags, rc):
-#     print('connected !!')
-#     mqtt.subscribe('ziggy/climate/thermostat/#')
-#     # mqtt.subscribe('home/mytopic')
-#
-# @mqtt.on_message()
-# def handle_mqtt_message(client, userdata, message):
-#     data =dict(
-#         topic = message.topic,
-#         payload = message.payload.decode()
-#     )
-#     print(data)
-#     if data['topic'].endswith('temperature'):
-#         socketio.emit('inside_temperature', data=data['payload'])
-#     # socketio.emit('test', data=data)
-#
 @app.route('/thermostat/')
 def thermostat():
     # global hvac
@@ -219,7 +193,7 @@ def index():
 def run():
     # asyncio.run(run_thermostat())
     # socketio.run(app, host='192.168.0.254')
-    socketio.run(app, host='ziggyweb.ziggyhome')
+    socketio.run(app, host='ziggy.ziggyhome')
     # app.run()
 
 

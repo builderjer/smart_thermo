@@ -1,0 +1,5 @@
+serial
+socketio
+eventlet
+flask
+flask_socketio

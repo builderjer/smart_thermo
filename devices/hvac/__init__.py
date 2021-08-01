@@ -22,7 +22,7 @@ SAVE_DIRECTORY = '.config/thermostat/{}_thermostat.json'
 UNIT_TYPES = ['HEATER', 'AIRCONDITIONER', 'VENT']
 UNIT_STATES = ['ON', 'OFF']
 # HOST = 'http://192.168.0.254:5000'
-HOST = 'http://ziggyweb.ziggyhome:5000'
+HOST = 'http://ziggy.ziggyhome:5000'
 
 
 class Thermostat:
