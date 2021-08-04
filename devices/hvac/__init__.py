@@ -21,7 +21,7 @@ SAVE_DIRECTORY = '.config/thermostat/{}_thermostat.json'
 # Hvac units
 UNIT_TYPES = ['HEATER', 'AIRCONDITIONER', 'VENT']
 UNIT_STATES = ['ON', 'OFF']
-# HOST = 'http://192.168.0.254:5000'
+# HOST = 'replace with your own server and port number'
 HOST = 'http://ziggy.ziggyhome:5000'
 
 
@@ -461,7 +461,8 @@ class HVACUnit:
 
 
 class HVAC(GenericDevice):
-    def __init__(self, host, name='generic_hvac', raw_data=None, control_board=None, heat_unit=None, ac_unit=None, vent_unit=None):
+    def __init__(self, host, name='generic_hvac', raw_data=None,
+                 control_board=None, heat_unit=None, ac_unit=None, vent_unit=None):
         raw_data = raw_data or {
             'name': name, 'description': 'Standard HVAC with heater, ac, and vent'}
         super().__init__(host, name, raw_data)

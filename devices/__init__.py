@@ -1,4 +1,4 @@
-from smart_thermo.tools import merge_dict
+from tools import merge_dict
 
 
 class GenericDevice:

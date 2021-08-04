@@ -7,8 +7,6 @@ import importlib
 from threading import Thread
 from threading import Timer
 
-sys.path.append('/home/jbrodie')
-
 def merge_dict(base, delta):
     """
         Recursively merging configuration dictionaries.
