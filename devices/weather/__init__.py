@@ -25,7 +25,8 @@ class Weather(GenericDevice):
         raw_data = raw_data or {'name': name, 'description': 'Weatherapi interface'}
         super().__init__(host, name, raw_data)
         self._sock = socket
-        self._forecast = None
+        self._forecast = self.load_forecast()
+        self._current = self.forecast.get('current')
         self._autosave = autosave or True
         self._autostart = autostart or False
         if self.autostart:
@@ -61,6 +62,15 @@ class Weather(GenericDevice):
         self._forecast = json_file
 
     @property
+    def current(self):
+        return self._current
+
+    @current.setter
+    def current(self, json_forecast):
+        json_forecast.current.condition.icon = Path(json_forecast.current.condition.icon).name
+        self._current = json_forecast.current
+
+    @property
     def autosave(self):
         return self._autosave
 
@@ -83,7 +93,22 @@ class Weather(GenericDevice):
         if forecast:
             f = forecast.json()
             self.forecast = f
-            return f
+            self.emit_junk()
+
+    def load_forecast(self):
+        try:
+            with open(Path(SAVE_DIRECTORY, SAVE_FILE), 'r') as w:
+                self.forecast = json.load(w)
+            self.current = self.forecast.get('current')
+            self.emit_junk()
+        except Exception as e:
+            print(f'could not load from file:  {e}')
+            self.forecast = None
+
+    def emit_junk(self):
+        if self.sock:
+            self.sock.emit('current_forecast', self.forecast)
+            self.sock.emit('current_weather', self.current)
 
     def save(self):
         def write():

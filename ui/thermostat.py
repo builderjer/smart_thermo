@@ -46,7 +46,8 @@ def setup_main_page(msg):
     socketio.emit('inside_temperature', msg.get('house_temp'))
     socketio.emit('thermostat_state', msg.get('thermostat_state'))
     socketio.emit('desired_temp', msg.get('desired_temp'))
-
+    socketio.emit('current_forecast', msg.get('current_forecast'))
+    socketio.emit('current_weather', msg.get('current_weather'))
 
 def tryme(msg):
     global hvac

@@ -5,6 +5,7 @@ import time
 import serial
 import socketio
 from smart_thermo.devices import GenericDevice
+from smart_thermo.devices import weather
 from smart_thermo.exceptions import *
 from smart_thermo.sensors import *
 from smart_thermo.tools import (convert_temp, create_daemon, create_timer,
@@ -477,8 +478,10 @@ class HVAC(GenericDevice):
             self._control_board = control_board or telemetrix.Telemetrix()
             if self.sock.sid:
                 self._thermostat = Thermostat(sock=self.sock)
+                self._weather = weather.Weather(self.host, sock=self.sock)
             else:
                 self._thermostat = Thermostat()
+                self._weather = weather.Weather(self.host)
         self._units = {'ac': self.ac, 'heater': self.heater, 'vent': self.vent}
 
         # setup the board
@@ -497,8 +500,9 @@ class HVAC(GenericDevice):
         self.sock.on('get_current_temp',
                      handler=self.thermostat.get_group_temp)
         self.sock.on('change_desired_temp', handler=self.set_desired_temp)
-        self.sock.on('main_page', handler=self.connect)
+        self.sock.on('main_page', handler=self.send_main_page)
         self.sock.on('get_sensors', handler=self.send_sensors)
+        self.sock.on('get_weather', handler=self.weather.emit_forecast)
         # Make sure everything is off
         for unit in self.units.values():
             self.turn_off(unit)
@@ -534,6 +538,10 @@ class HVAC(GenericDevice):
     @property
     def thermostat(self):
         return self._thermostat
+
+    @property
+    def weather(self):
+        return self._weather
 
     @property
     def control_board(self):
@@ -585,15 +593,22 @@ class HVAC(GenericDevice):
     def connect(self):
         print(f'connected to {HOST} with sid of {self.sock.sid}')
         self.thermostat.sock = self.sock
-        d = {
-            'house_temp': self.thermostat.get_group_temp(self.thermostat.default_area),
-            'desired_temp': self.thermostat.desired_temp,
-            'thermostat_state': self.thermostat.state
-        }
-        return d
+        self.weather.sock = self.sock
+        self.send_main_page()
 
     def disconnect(self):
         self.thermostat.sock = None
+        self.weather.sock = None
+
+    def send_main_page(self):
+        main_page_data = {
+            'house_temp': self.thermostat.get_group_temp(self.thermostat.default_area),
+            'desired_temp': self.thermostat.desired_temp,
+            'thermostat_state': self.thermostat.state,
+            'weather_forecast': self.weather.forecast,
+            'current_weather': self.weather.current
+        }
+        return main_page_data
 
     def get_hvac(self):
         return self.as_dict
