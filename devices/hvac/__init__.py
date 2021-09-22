@@ -500,9 +500,11 @@ class HVAC(GenericDevice):
         self.sock.on('get_current_temp',
                      handler=self.thermostat.get_group_temp)
         self.sock.on('change_desired_temp', handler=self.set_desired_temp)
+        # main_page ariving from thermostat.py when connected to the socket
         self.sock.on('main_page', handler=self.send_main_page)
         self.sock.on('get_sensors', handler=self.send_sensors)
-        self.sock.on('get_weather', handler=self.weather.emit_forecast)
+        self.sock.on('get_weather', handler=self.weather.emit_weather)
+        self.sock.on('change_state', handler=self.change_thermostat_state)
         # Make sure everything is off
         for unit in self.units.values():
             self.turn_off(unit)
@@ -605,7 +607,7 @@ class HVAC(GenericDevice):
             'house_temp': self.thermostat.get_group_temp(self.thermostat.default_area),
             'desired_temp': self.thermostat.desired_temp,
             'thermostat_state': self.thermostat.state,
-            'weather_forecast': self.weather.forecast,
+            'current_forecast': self.weather.forecast,
             'current_weather': self.weather.current
         }
         return main_page_data
@@ -627,6 +629,12 @@ class HVAC(GenericDevice):
                 return self.thermostat.desired_temp
         except Exception as e:
             print(f'exception in set_desired_temp:  {e}')
+
+    def change_thermostat_state(self, msg):
+        try:
+            self.thermostat.state = msg
+        except Exception as e:
+            print(e)
 
     def send_sensors(self):
         print(f'in send_sensors: {list(self.thermostat.sensors.keys())}')
@@ -675,6 +683,7 @@ class HVAC(GenericDevice):
             self.control_board = telemetrix.Telemetrix()
         create_daemon(self.connect_to_socket)
         create_daemon(self.check_for_socket)
+        create_daemon(self.weather.run)
         self.setup_sensors()
         # else:
         #     raise BoardConnectError('The board is already running')

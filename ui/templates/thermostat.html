@@ -13,10 +13,10 @@
         <span id="high_temp">69</span>
         <span> / </span>
         <span id="low_temp">69</span>
-        <div id="forecast_icon" class="">
-          <img src="{{ url_for('static', filename = 'images/weather/AerisIcons/clear.png') }}" alt="no icon">
+        <div id="forecast_icon_wrapper" class="">
+          <img id="forecast_icon" src="{{ w_icon }}" alt="no icon">
         </div>
-        <p class="xsm_txt">todays forecast summary and hopefully it wraps around</p>
+        <p id="forecast_summary" class="xsm_txt">todays forecast summary and hopefully it wraps around</p>
       </div>
       <div id="current_weather_wrapper" class="in_a_bubble dark_background">
         <div class="md_txt title">current weather</div>

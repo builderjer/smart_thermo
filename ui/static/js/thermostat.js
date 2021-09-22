@@ -16,6 +16,7 @@ function test_me() {
 };
 
 function change_state(msg) {
+    console.log('state changed to ', msg)
   if (msg === 'OFF') {
     $('#off_indicator').attr('class', 'in_a_bubble clickable light_background');
   }
@@ -56,11 +57,45 @@ function get_area_temp(msg) {
 }
 $(document).ready(function(){
     console.log(socket)
+//
+// Weather section
+    socket.on('forecast', function(msg) {
+        weather = msg.forecastday[0].day;
+        console.log(weather)
+        // var weather = msg;
+        $('#high_temp').text(Math.round(weather.maxtemp_f));
+        $('#low_temp').text(Math.round(weather.mintemp_f));
+        console.log(weather.condition);
+        icon = weather.condition.icon;
+        $('#forecast_summary').text(weather.condition.text);
+        // icon = "{{ url_for('static', filename='" + weather.condition.icon + "') }}";
+        socket.emit('weather_icon', weather.condition.icon)
+        console.log(icon);
+        // $('#f_icon').attr("src", icon);
+    })
+
+    socket.on('f_icon', function(msg) {
+        console.log('f_icon', msg)
+        $('#forecast_icon').attr('src', msg);
+    })
+
+    socket.on('current', function(msg) {
+        console.log(msg);
+        temp = parseInt(msg.temp_f).toString() + '\xB0';
+        $('#outside_temp').text(temp);
+        $('#current_summary').text(msg.condition.text);
+        socket.emit('current_icon', msg.condition.icon);
+    })
+
+    socket.on('c_icon', function(msg) {
+        console.log('f_icon', msg)
+        $('#current_icon').attr('src', msg);
+    })
 
     socket.on('inside_temperature', function(msg) {
-        console.log(msg);
+        // console.log(msg);
         temp = Math.round(parseInt(msg)).toString() + '\xB0';
-        console.log(temp)
+        // console.log(temp)
         $('#house_temp').text(temp);
     });
 

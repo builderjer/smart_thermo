@@ -13,7 +13,7 @@ from flask_socketio import SocketIO
 
 # BUG: Find another way to do this
 #  Should go away when used as package
-sys.path.append('/home/jbrodie/Software/')
+sys.path.append('/home/jbrodie/Development/')
 
 from smart_thermo.tools import *
 from smart_thermo.exceptions import *
@@ -36,9 +36,14 @@ hvac = None
 
 @socketio.event
 def connect():
-    global hvac
+    """
+    When connected to the socket, emit certian events
+    to display the data on the main page.
+    """
+    # global hvac
     # print(hvac, '##########################')
     print('connected socketio')
+    # Emit this to hvac.py and send the results to the main page
     socketio.emit('main_page', callback=setup_main_page)
 
 
@@ -46,8 +51,9 @@ def setup_main_page(msg):
     socketio.emit('inside_temperature', msg.get('house_temp'))
     socketio.emit('thermostat_state', msg.get('thermostat_state'))
     socketio.emit('desired_temp', msg.get('desired_temp'))
-    socketio.emit('current_forecast', msg.get('current_forecast'))
-    socketio.emit('current_weather', msg.get('current_weather'))
+    # print(type(msg.get('current_forecast')))
+    socketio.emit('forecast', msg.get('current_forecast'))
+    socketio.emit('current', msg.get('current_weather'))
 
 def tryme(msg):
     global hvac
@@ -59,6 +65,12 @@ def tryme(msg):
 def set_current_temp(temp):
     socketio.emit('area_temp', temp)
 
+
+@socketio.on('current_forecast')
+def current_forecast(msg):
+    f = msg.get('forecastday')[0].get('day')
+    print('current_forecast', f)
+    socketio.emit('weather_forecast')
 
 @socketio.on('get_area_temp')
 def get_area_temp(msg):
@@ -100,15 +112,28 @@ def change_desired_temp(message):
 def changed_temp(message):
     socketio.emit('changed_temp', message)
 
+@socketio.on('weather_icon')
+def weather_icon(icon):
+    print('in weather_icon', icon)
+    i = url_for('static', filename=icon)
+    print(i)
+    socketio.emit('f_icon', i)
+
+@socketio.on('current_icon')
+def current_icon(icon):
+    i = url_for('static', filename=icon)
+    socketio.emit('c_icon', i)
 
 @socketio.on('change_state')
 def change_state(message):
     print(f'state changed to {message}')
-    # try:
-    #     hvac.state = message.upper()
-    #     socketio.emit('change_thermostat_state', message.upper())
-    # except Exception as e:
-    #     print(e)
+    try:
+        # global hvac
+        # hvac.state = message.upper()
+        socketio.emit('change_thermostat_state', message.upper())
+        socketio.emit('main_page', callback=setup_main_page)
+    except Exception as e:
+        print(e)
 
 
 @app.route('/thermostat/')
@@ -185,10 +210,10 @@ def stopServer():
     return jsonify({"success": True, "message": "Server is shutting down..."})
 
 
-@app.route('/')
-def index():
-    # , c_weather = weather.get_current_weather(), f_weather = weather.get_forecast())
-    return render_template('test.html')
+# @app.route('/')
+# def index():
+#     # , c_weather = weather.get_current_weather(), f_weather = weather.get_forecast())
+#     return render_template('test.html')
 
 
 def run():
