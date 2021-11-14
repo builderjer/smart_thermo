@@ -21,8 +21,8 @@ SAVE_DIRECTORY = '.config/thermostat/{}_thermostat.json'
 # Hvac units
 UNIT_TYPES = ['HEATER', 'AIRCONDITIONER', 'VENT']
 UNIT_STATES = ['ON', 'OFF']
-# HOST = 'http://192.168.0.254:5000'
-HOST = 'http://ziggy.ziggyhome:5000'
+HOST = 'http://192.168.0.241:5000'
+# HOST = 'http://ziggy.ziggyhome:5000'
 
 
 class Thermostat:
@@ -40,7 +40,7 @@ class Thermostat:
         self._min_cool_temp = kwargs.get('min_cool_temp', 72)
         self._max_cool_temp = kwargs.get('max_cool_temp', 82)
         self._default_heat_temp = kwargs.get('default_heat_temp', 68)
-        self._default_cool_temp = kwargs.get('default_cool_temp', 78)
+        self._default_cool_temp = kwargs.get('default_cool_temp', 76)
         mode = kwargs.get('mode', 'AUTO')
         if mode in THERMOSTAT_MODES:
             self._mode = mode
@@ -50,7 +50,7 @@ class Thermostat:
         self._desired_temp = None
         self._save_on_exit = kwargs.get('save_on_exit', True)
         self._sock = kwargs.get('sock', None)
-        print('done with init')
+        print('done with init thermostat')
 
     @property
     def sock(self):
@@ -155,7 +155,6 @@ class Thermostat:
     @state.setter
     def state(self, new_state):
         if new_state != self._state and new_state in THERMOSTAT_STATES:
-
             self._state = new_state
             if self.state == 'COOL':
                 self.desired_temp = self.default_cool_temp
@@ -307,7 +306,8 @@ class Thermostat:
                 group_sensors.append(sensor.id)
             return group_sensors
         except Exception as e:
-            print(e)
+            pass
+            # print(e)
 
     def get_group_temp(self, group_name):
         try:
@@ -319,7 +319,8 @@ class Thermostat:
                     temps.append(sensor_temp)
             return round(sum(temps) / len(temps), 2)
         except Exception as e:
-            print(e)
+            pass
+            # print(e)
 # End Group stuff
 #######################################
 
@@ -387,7 +388,7 @@ class HVACUnit:
 
     @time_on.setter
     def time_on(self, timestamp):
-        print(self.time_on)
+        # print(self.time_on)
         # Get the difference in seconds
         try:
             if self.time_on:
@@ -395,7 +396,8 @@ class HVACUnit:
             else:
                 self._time_on = int(timestamp - self.time_off)
         except TypeError as e:
-            print(e)
+            pass
+            # print(e)
 
     @property
     def time_off(self):
@@ -415,7 +417,7 @@ class HVACUnit:
 
     @state.setter
     def state(self, new_state):
-        if self._state != new_state and new_state in UNIT_STATES:
+        if self.state != new_state and new_state in UNIT_STATES:
             if not self._timer:
                 self._state = new_state
                 # Don't want it to switch on and off continuasly so make a timer
@@ -447,7 +449,7 @@ class HVACUnit:
             self.time_off = int(time.time())
             return True
         except HvacUnitError as e:
-            print(e)
+            # print(e)
             return False
 
     def turn_off(self):
@@ -456,7 +458,7 @@ class HVACUnit:
             self.time_on = int(time.time())
             return True
         except HvacUnitError as e:
-            print(e)
+            # print(e)
             return False
 
 
@@ -626,11 +628,12 @@ class HVAC(GenericDevice):
             if unit.turn_on():
                 self.control_board.digital_write(unit.on_pin, 1)
                 print(f'turned on {unit.id}')
-                print(f'set pin {unit.on_pin} to 1')
+                print(self.thermostat.get_group_temp(self.thermostat.default_area))
+                # print(f'set pin {unit.on_pin} to 1')
                 time.sleep(.1)
                 if unit.relay_type == 'L':
                     self.control_board.digital_write(unit.on_pin, 0)
-                    print(f'set pin {unit.on_pin} to 0')
+                    # print(f'set pin {unit.on_pin} to 0')
                     time.sleep(.1)
         except Exception as e:
             print('in turn_on')
@@ -643,11 +646,12 @@ class HVAC(GenericDevice):
             if unit.turn_off():
                 self.control_board.digital_write(unit.off_pin, 1)
                 print(f'turned off {unit.id}')
-                print(f'set pin {unit.off_pin} to 1')
+                print(self.thermostat.get_group_temp(self.thermostat.default_area))
+                # print(f'set pin {unit.off_pin} to 1')
                 time.sleep(.1)
                 if unit.relay_type == 'L':
                     self.control_board.digital_write(unit.off_pin, 0)
-                    print(f'set pin {unit.off_pin} to 0')
+                    # print(f'set pin {unit.off_pin} to 0')
                     time.sleep(.1)
         except Exception as e:
             print('in turn_off')
@@ -716,7 +720,8 @@ class HVAC(GenericDevice):
                     elif temp < self.thermostat.desired_temp - self.temp_diff:
                         self.turn_on(self.heater)
                 except Exception as e:
-                    print(e)
+                    pass
+                    # print(e)
                 time.sleep(1)
             while self.thermostat.state == 'VENT':
                 try:
@@ -734,12 +739,13 @@ class HVAC(GenericDevice):
                     create_timer(15 * 60, switch)
 
                 except Exception as e:
-                    print(e)
+                    pass
+                    # print(e)
 
 
 hvac = HVAC(HOST, control_board=telemetrix.Telemetrix(), heat_unit=HVACUnit('heater', on_pin=4, off_pin=5),
             ac_unit=HVACUnit('airconditioner', on_pin=6, off_pin=7), vent_unit=HVACUnit('vent', on_pin=2, off_pin=3))
 hvac.startup()
 # create_daemon(hvac.run)
-hvac.thermostat.state = 'COOL'
-hvac.run()
+hvac.thermostat.state = 'HEAT'
+# hvac.run()

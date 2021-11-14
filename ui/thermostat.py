@@ -13,7 +13,7 @@ from flask_socketio import SocketIO
 
 # BUG: Find another way to do this
 #  Should go away when used as package
-sys.path.append('/home/jbrodie/Software/')
+sys.path.append('/home/jbrodie/Software/oldserver')
 
 from smart_thermo.tools import *
 from smart_thermo.exceptions import *
@@ -192,8 +192,8 @@ def index():
 
 def run():
     # asyncio.run(run_thermostat())
-    # socketio.run(app, host='192.168.0.254')
-    socketio.run(app, host='ziggy.ziggyhome')
+    socketio.run(app, host='192.168.0.241')
+    # socketio.run(app, host='ziggy.ziggyhome')
     # app.run()
 
 

@@ -50,16 +50,16 @@ def convert_temp(temp, output_format):
     raise TypeError(f'{output_format} is not a valid conversion type')
 
 def get_avaliable_sensor_types():
-    from brodie_house import sensors
-    c = [cls_name for cls_name, cls_obj in inspect.getmembers(sys.modules['brodie_house.sensors']) if inspect.isclass(cls_obj)]
+    from smart_thermo import sensors
+    c = [cls_name for cls_name, cls_obj in inspect.getmembers(sys.modules['smart_thermo.sensors']) if inspect.isclass(cls_obj)]
     s = []
     # while True:
     for cl in c:
         if cl.endswith('Error') or cl.endswith('Sensor'):
             continue
         else:
-            print(type(cl))
+            # print(type(cl))
             s.append(cl)
             # c.pop(c.index(cl))
-        print(s)
+        # print(s)
     return s
