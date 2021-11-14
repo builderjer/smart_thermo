@@ -1,0 +1,9 @@
+[Unit]
+Description=Personal smart thermostat
+
+[Service]
+Type=simple
+ExecStart=/home/pi/smart_thermo/start.sh
+
+[Install]
+WantedBy=multi-user.target

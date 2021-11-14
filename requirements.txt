@@ -1,5 +1,5 @@
-serial
-socketio
+requests
 eventlet
 flask
 flask_socketio
+telemetrix

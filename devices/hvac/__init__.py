@@ -4,11 +4,16 @@ import time
 
 import serial
 import socketio
-from smart_thermo.devices import GenericDevice
-from smart_thermo.exceptions import *
-from smart_thermo.sensors import *
-from smart_thermo.tools import (convert_temp, create_daemon, create_timer,
-                                merge_dict)
+from devices import GenericDevice
+from exceptions import *
+from sensors import *
+from tools import (convert_temp, create_daemon, create_timer, merge_dict)
+
+# from smart_thermo.devices import GenericDevice
+# from smart_thermo.exceptions import *
+# from smart_thermo.sensors import *
+# from smart_thermo.tools import (convert_temp, create_daemon, create_timer,
+#                                 merge_dict)
 from telemetrix import telemetrix
 
 ################################
@@ -21,7 +26,8 @@ SAVE_DIRECTORY = '.config/thermostat/{}_thermostat.json'
 # Hvac units
 UNIT_TYPES = ['HEATER', 'AIRCONDITIONER', 'VENT']
 UNIT_STATES = ['ON', 'OFF']
-HOST = 'http://192.168.0.241:5000'
+HOST = 'http://ziggythermostat:5000'
+# HOST = 'http://192.168.0.241:5000'
 # HOST = 'http://ziggy.ziggyhome:5000'
 
 
@@ -584,7 +590,7 @@ class HVAC(GenericDevice):
             time.sleep(.001)
 
     def connect(self):
-        print(f'connected to {HOST} with sid of {self.sock.sid}')
+        print(f'connected to {self.host} with sid of {self.sock.sid}')
         self.thermostat.sock = self.sock
         d = {
             'house_temp': self.thermostat.get_group_temp(self.thermostat.default_area),
@@ -742,10 +748,9 @@ class HVAC(GenericDevice):
                     pass
                     # print(e)
 
-
 hvac = HVAC(HOST, control_board=telemetrix.Telemetrix(), heat_unit=HVACUnit('heater', on_pin=4, off_pin=5),
             ac_unit=HVACUnit('airconditioner', on_pin=6, off_pin=7), vent_unit=HVACUnit('vent', on_pin=2, off_pin=3))
 hvac.startup()
 # create_daemon(hvac.run)
 hvac.thermostat.state = 'HEAT'
-# hvac.run()
+hvac.run()

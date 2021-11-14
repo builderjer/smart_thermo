@@ -1,7 +1,7 @@
 import time
 
-from smart_thermo.tools import merge_dict
-from smart_thermo.exceptions import *
+from tools import merge_dict
+from exceptions import *
 
 class GenericSensor:
     def __init__(self, id, name=None, raw_data=None):

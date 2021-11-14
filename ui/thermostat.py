@@ -13,10 +13,10 @@ from flask_socketio import SocketIO
 
 # BUG: Find another way to do this
 #  Should go away when used as package
-sys.path.append('/home/jbrodie/Software/oldserver')
+# sys.path.append('/home/jbrodie/Software/oldserver')
 
-from smart_thermo.tools import *
-from smart_thermo.exceptions import *
+from tools import *
+from exceptions import *
 
 eventlet.monkey_patch()
 
@@ -187,12 +187,12 @@ def stopServer():
 @app.route('/')
 def index():
     # , c_weather = weather.get_current_weather(), f_weather = weather.get_forecast())
-    return render_template('test.html')
+    return render_template('index.html')
 
 
 def run():
     # asyncio.run(run_thermostat())
-    socketio.run(app, host='192.168.0.241')
+    socketio.run(app, host='ziggythermostat')
     # socketio.run(app, host='ziggy.ziggyhome')
     # app.run()
 
