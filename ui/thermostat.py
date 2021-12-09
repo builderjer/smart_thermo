@@ -11,10 +11,6 @@ from pathlib import Path
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_socketio import SocketIO
 
-# BUG: Find another way to do this
-#  Should go away when used as package
-# sys.path.append('/home/jbrodie/Software/oldserver')
-
 from tools import *
 from exceptions import *
 
